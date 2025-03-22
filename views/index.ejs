@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        .card {
+            cursor: pointer;
+            background-color: #C6F4C6; /* Lighter green background */
+            color: #000000; /* Black text */
+            height: 150px; /* Fixed height for cards */
+            position: relative; /* Add this line */
+        }
+        .card:hover {
+            background-color: #B3FFB3; /* Lighter green on hover */
+        }
+        .badge {
+            font-size: 16px;
+            background-color: #FFFFFF; /* White background for span */
+            color: #008000; /* Green text for span */
+            position: absolute;
+            right: 10px;
+            bottom: 5px; /* Adjust the top position */
+        }
+        header {
+            background-color: #8BC34A; /* Green background for header */
+            color: #FFFFFF; /* White text for header */
+        }
+    </style>
+</head>
+<body>
+    <!-- Header section -->
+    <header class="p-3 text-center">
+        <h1 class="display-4 text-white">HEART RECOVERY FOUNDATION</h1>
+    </header>
+    <!-- Main content section -->
+    <main class="container mt-5">
+        <div class="row">
+            <div class="col-md-3 mb-3 position-relative">
+                <div class="card" onclick="location.href='/volunteers'">
+                    <div class="card-body">
+                        <h2 class="card-title">Volunteers</h2>
+                        <p class="card-text">View volunteer details</p>
+                    </div>
+                    <span class="badge badge-pill"><%= volunteers.length %> Volunteers</span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 position-relative">
+                <div class="card" onclick="location.href='/indsponsors'">
+                    <div class="card-body">
+                        <h2 class="card-title">Individual Sponsors</h2>
+                        <p class="card-text">View individual sponsor details</p>
+                    </div>
+                    <span class="badge badge-pill"><%= individualSponsors.length %> Sponsors</span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 position-relative">
+                <div class="card" onclick="location.href='/corporatesponsors'">
+                    <div class="card-body">
+                        <h2 class="card-title">Corporate Sponsors</h2>
+                        <p class="card-text">View corporate sponsor details</p>
+                    </div>
+                    <span class="badge badge-pill"><%= corporateSponsors.length %> Sponsors</span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 position-relative">
+                <div class="card" onclick="location.href='/patients'">
+                    <div class="card-body">
+                        <h2 class="card-title">Patients</h2>
+                        <p class="card-text">View patient details</p>
+                    </div>
+                    <span class="badge badge-pill"><%= patients.length %> Patients</span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 position-relative">
+                <div class="card" onclick="location.href='/contacts'">
+                    <div class="card-body">
+                        <h2 class="card-title">Contacts</h2>
+                        <p class="card-text">View contact details</p>
+                    </div>
+                    <span class="badge badge-pill"><%= contacts.length %> Contacts</span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 position-relative">
+                <div class="card" onclick="location.href='/donations'">
+                    <div class="card-body">
+                        <h2 class="card-title">Donations</h2>
+                        <p class="card-text">View donation details</p>
+                    </div>
+                    <span class="badge badge-pill"><%= donations.length %> Donations</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Footer section -->
+    <footer class="bg-dark text-white p-3 text-center mt-3">
+        <p>&copy; 2023 Heart Recovery Foundation</p>
+    </footer>
+</body>
+</html>

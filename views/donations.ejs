@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donations</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        .card {
+            cursor: pointer;
+            background-color: #C6F4C6; /* Lighter green background */
+            color: #000000; /* Black text */
+            height: auto; /* Auto height for cards */
+            position: relative; /* Add this line */
+        }
+        .card:hover {
+            background-color: #B3FFB3; /* Lighter green on hover */
+        }
+        .view-details-link {
+            background-color: #FFFFFF; /* White background */
+            color: #008000; /* Green text */
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none; /* Remove underline */
+        }
+        .view-details-link.active {
+            color: #FFFFFF; /* White text */
+            background-color: #FFFFFF; /* White background */
+            color: #008000; /* Green text */
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none; /* Remove underline */
+        }
+        .screenshot-preview {
+            width: 150px; /* Small preview size */
+            height: 200px; /* Small preview size */
+            border: 1px solid #CCCCCC;
+            cursor: pointer; /* Add cursor pointer */
+        }
+        .screenshot-full-view {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%; /* Large preview size */
+            height: 80%; /* Large preview size */
+            background-color: #FFFFFF;
+            padding: 20px;
+            border: none;
+            z-index: 1000;
+            display: none;
+            text-align: center;
+        }
+        .screenshot-full-view img {
+            width: 100%;
+            height: 100%;
+        }
+        .card-number {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 44px;
+            font-weight: bold;
+        }
+        .btn{
+            color:green
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Donations</h2>
+        <% donations.forEach((donation, index) => { %>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <span class="card-number"><%= index + 1 %></span>
+                    <h5 class="card-title"><%= donation.donorName %></h5>
+                    <a href="#" class="view-details-link" data-toggle="collapse" data-target="#collapse<%= index %>">View Details</a>
+                    <div id="collapse<%= index %>" class="collapse mt-5">
+                        <p class="card-text">Email Address: <%= donation.emailAddress %></p>
+                        <p class="card-text">Phone Number: <%= donation.phoneNumber %></p>
+                        <p class="card-text">Donation Amount: <%= donation.donationAmount %></p>
+                        <p class="card-text">Message: <%= donation.message %></p>
+                        <p class="card-text">Screenshot: <a href="#" onclick="showScreenshot('<%= donation.screenshot %>')"><img src="/uploads/<%= donation.screenshot %>" class="screenshot-preview"></a></p>
+                        <a href="/uploads/<%= donation.screenshot %>" download="<%= donation.screenshot %>"><button class="btn">Download Screenshot</button></a>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+        <div id="screenshot-full-view" class="screenshot-full-view">
+            <span class="close-btn" onclick="closeScreenshot()">&times;</span>
+            <img id="screenshot-image" src="" alt="Screenshot Preview">
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        function showScreenshot(screenshotUrl) {
+    document.getElementById('screenshot-full-view').style.display = 'block';
+    document.getElementById('screenshot-image').src = '/uploads/' + screenshotUrl;
+}
+
+function closeScreenshot() {
+    document.getElementById('screenshot-full-view').style.display = 'none';
+}
+
+$(document).ready(function() {
+    $('.view-details-link').on('click', function() {
+        $(this).toggleClass('active');
+        if ($(this).hasClass('active')) {
+            $(this).text('Close Details');
+        } else {
+            $(this).text('View Details');
+        }
+    });
+});
+</script>
+</body>
+</html>

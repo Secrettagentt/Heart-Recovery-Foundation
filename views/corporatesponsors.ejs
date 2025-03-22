@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Sponsors</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+ .card-number {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .card {
+            cursor: pointer;
+            background-color: #C6F4C6; /* Lighter green background */
+            color: #000000; /* Black text */
+            height: auto; /* Auto height for cards */
+            position: relative; /* Add this line */
+        }
+        .card:hover {
+            background-color: #B3FFB3; /* Lighter green on hover */
+        }
+        .view-details-link {
+            background-color: #FFFFFF; /* White background */
+            color: #008000; /* Green text */
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none; /* Remove underline */
+        }
+        .view-details-link.active {
+            color: #008000; /* Green text */
+            background-color: #FFFFFF; /* White background */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Corporate Sponsors</h2>
+        <% corporateSponsors.forEach((corporateSponsor, index) => { %>
+            <div class="card mb-3">
+                <div class="card-body">
+                <span class="card-number"><%= index + 1 %></span>
+
+                    <h5 class="card-title"><%= corporateSponsor.companyName %></h5>
+                    <a href="#" class="view-details-link" data-toggle="collapse" data-target="#collapse<%= index %>">View Details</a>
+                    <div id="collapse<%= index %>" class="collapse mt-5">
+                        <p class="card-text">Contact Person: <%= corporateSponsor.contactPerson %></p>
+                        <p class="card-text">Address: <%= corporateSponsor.address %></p>
+                        <p class="card-text">Phone Number: <%= corporateSponsor.phoneNumber %></p>
+                        <p class="card-text">Email Address: <%= corporateSponsor.emailAddress %></p>
+                        <p class="card-text">Message: <%= corporateSponsor.message %></p>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.view-details-link').on('click', function() {
+                $(this).toggleClass('active');
+                if ($(this).hasClass('active')) {
+                    $(this).text('Close Details');
+                } else {
+                    $(this).text('View Details');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

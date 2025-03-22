@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patients</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+ .card-number {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .card {
+            cursor: pointer;
+            background-color: #C6F4C6; /* Lighter green background */
+            color: #000000; /* Black text */
+            height: auto; /* Auto height for cards */
+            position: relative; /* Add this line */
+        }
+        .card:hover {
+            background-color: #B3FFB3; /* Lighter green on hover */
+        }
+        .view-details-link {
+            background-color: #FFFFFF; /* White background */
+            color: #008000; /* Green text */
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none; /* Remove underline */
+        }
+        .view-details-link.active {
+            color: #008000; /* Green text */
+            background-color: #FFFFFF; /* White background */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Patients</h2>
+        <% patients.forEach((patient, index) => { %>
+            <div class="card mb-3">
+                <div class="card-body">
+     
+                   <span class="card-number"><%= index + 1 %></span>
+
+                    <h5 class="card-title"><%= patient.name %></h5>
+                    <a href="#" class="view-details-link" data-toggle="collapse" data-target="#collapse<%= index %>">View Details</a>
+                    <div id="collapse<%= index %>" class="collapse mt-5">
+                        <p class="card-text">Email Address: <%= patient.emailAddress %></p>
+                        <p class="card-text">Professional: <%= patient.professional %></p>
+                        <p class="card-text">Patient DOB: <%= patient.patientDob %></p>
+                        <p class="card-text">Education Level: <%= patient.educationLevel %></p>
+                        <p class="card-text">Marital Status: <%= patient.maritalStatus %></p>
+                        <p class="card-text">Religion: <%= patient.religion %></p>
+                        <p class="card-text">Sex: <%= patient.sex %></p>
+                        <p class="card-text">Mobile Phone: <%= patient.mobilePhone %></p>
+                        <p class="card-text">Work Phone: <%= patient.workPhone %></p>
+                        <p class="card-text">Referral Hospital: <%= patient.referralHospital %></p>
+                        <p class="card-text">Referring Physician: <%= patient.referringPhysician %></p>
+                        <p class="card-text">Physician Phone Number: <%= patient.physicianPhoneNumber %></p>
+                        <p class="card-text">Estimated Cost of Surgery: <%= patient.estimatedCostOfSurgery %></p>
+                        <p class="card-text">Amount Raised: <%= patient.amountRaised %></p>
+                        <p class="card-text">Annual Income: <%= patient.annualIncome %></p>
+                        <p class="card-text">Party Responsible for Payment: <%= patient.partyResponsibleForPayment %></p>
+                        <p class="card-text">Name of Health Insurance Company: <%= patient.nameOfHealthInsuranceCompany %></p>
+                        <p class="card-text">Insurance Company Phone: <%= patient.insuranceCompanyPhone %></p>
+                        <p class="card-text">Cardiac Diagnosis: <%= patient.cardiacDiagnosis %></p>
+                        <p class="card-text">Relevant Medical History: <%= patient.relevantMedicalHistory %></p>
+                        <p class="card-text">Past Surgical History: <%= patient.pastSurgicalHistory %></p>
+                        <p class="card-text">Current Medications: <%= patient.currentMedications %></p>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.view-details-link').on('click', function() {
+                $(this).toggleClass('active');
+                if ($(this).hasClass('active')) {
+                    $(this).text('Close Details');
+                } else {
+                    $(this).text('View Details');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
