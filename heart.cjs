@@ -24,9 +24,11 @@ const upload = multer({
     cb(null, filename);
   },
 });
-let db,  dbName = 'HRF'
+let db,  
+ dbConnectionStr = 'mongodb+srv://Heartrecovfoundation:Heartrecovfoundation@cluster0.9crw1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+dbName = 'HRF'
 
-MongoClient.connect(process.env.dbConnectionStr, { useUnifiedTopology: true })
+MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
   .then(client => {
     console.log(`Connected to ${dbName} Database`)
     db = client.db(dbName)
