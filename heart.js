@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const MongoClient = require('mongodb').MongoClient
-const PORT = 3000
+const PORT = 4000
 const path = require('path')
 const multer = require('multer')
 const dotenv = require('dotenv');
@@ -41,7 +41,7 @@ app.use(express.json())
 app.use('/uploads', express.static('uploads'));
 
 app.get('/', (request, response) => {
-  response.sendFile(path.join(__dirname, 'theme', 'index.html'))
+  response.sendFile(path.join(__dirname, 'index.html'))
 })
 
 app.post('/submit/volunteer', upload.single('cvUpload'), async (request, response) => {
@@ -177,7 +177,7 @@ app.post('/submit/donation', upload.single('ssUpload'), async (request, response
 })
 
 app.get('/', (request, response) => {
-  response.sendFile(path.join(__dirname, 'theme', 'index.html'))
+  response.sendFile(('index.html'))
 })
 
 
@@ -267,6 +267,6 @@ app.get('/donations', async (req, res) => {
 });
 
 
-app.listen(process.env.PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

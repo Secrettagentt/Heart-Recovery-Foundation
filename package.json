@@ -1,12 +1,12 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "heart.cjs",
+  "main": "heart.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
    "build": "vercel build",
   "deploy": "vercel deploy",
-    "start": "node heart.cjs"
+    "start": "node heart.js"
   },
   "author": "",
   "license": "ISC",
@@ -20,7 +20,7 @@
     "mongodb": "^6.15.0",
     "multer": "^1.4.5-lts.1"
   },
-   "type": "commonjs",
+   "type": "modules",
   "engines": {
     "node": ">=14.17.0"
   }

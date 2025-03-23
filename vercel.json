@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "heart.cjs",
+      "src": "heart.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "heart.cjs"
+      "dest": "heart.js"
     }
   ]
 }
