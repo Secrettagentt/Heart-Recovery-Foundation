@@ -1,9 +1,14 @@
+
 {
   "version": 2,
   "builds": [
     {
+      "src": "package.json",
+      "use": "@vercel/static-build"
+    },
+    {
       "src": "heart.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node-server"
     }
   ],
   "routes": [
@@ -11,7 +16,8 @@
       "src": "/(.*)",
       "dest": "heart.js"
     }
-  ]
+  ],
+  "env": {
+    "dbConnectionStr": "mongodb+srv://Heartrecovfoundation:Heartrecovfoundation@cluster0.9crw1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+  }
 }
-
-

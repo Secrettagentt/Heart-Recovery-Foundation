@@ -1,15 +1,42 @@
-const express = require('express')
-const app = express()
-const MongoClient = require('mongodb').MongoClient
-const PORT = 4000
-const path = require('path')
-const multer = require('multer')
-const dotenv = require('dotenv');
+import express from 'express';
+import multer from 'multer';
+import { MongoClient } from 'mongodb';
+import dotenv from 'dotenv';
+import path from 'path';
 
 dotenv.config();
-// configure multer
+
+const app = express();
+const PORT = 4000;
+
+const dbConnectionStr = 'mongodb+srv://Heartrecovfoundation:Heartrecovfoundation@cluster0.9crw1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const dbName = 'HRF';
+
+const client = new MongoClient(dbConnectionStr, { useUnifiedTopology: true });
+
+let db;
+
+client.connect().then(() => {
+  db = client.db(dbName);
+  console.log(`Connected to ${dbName} Database`);
+}).catch((err) => {
+  console.error(err);
+});
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads/');
+  },
+  filename: (req, file, cb) => {
+    const originalName = file.originalname;
+    const fileExtension = path.extname(originalName);
+    const filename = `${Date.now()}${fileExtension}`;
+    cb(null, filename);
+  },
+});
+
 const upload = multer({
-  dest: './uploads/',
+  storage,
   limits: { fileSize: 1000000 },
   fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(pdf|docx|doc|jpg|jpeg|png)$/)) {
@@ -17,36 +44,20 @@ const upload = multer({
     }
     cb(undefined, true);
   },
-  filename(req, file, cb) {
-    const originalName = file.originalname;
-    const fileExtension = path.extname(originalName);
-    const filename = `${Date.now()}${fileExtension}`;
-    cb(null, filename);
-  },
 });
-let db,  
- dbConnectionStr = 'mongodb+srv://Heartrecovfoundation:Heartrecovfoundation@cluster0.9crw1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
-dbName = 'HRF'
 
-MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
-  .then(client => {
-    console.log(`Connected to ${dbName} Database`)
-    db = client.db(dbName)
-  })
-
-app.set('view engine', 'ejs')
-app.use(express.static('theme'))
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
+app.set('view engine', 'ejs');
+app.use(express.static('theme'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
 app.get('/', (request, response) => {
-  response.sendFile(path.join(__dirname, 'index.html'))
-})
+  response.sendFile(path.join(__dirname, 'index.html'));
+});
 
 app.post('/submit/volunteer', upload.single('cvUpload'), async (request, response) => {
   try {
-    
     if (!request.file) {
       throw new Error('No file uploaded!');
     }
@@ -58,15 +69,17 @@ app.post('/submit/volunteer', upload.single('cvUpload'), async (request, respons
       areaOfInterest: request.body.areaOfInterest,
       howDidYouFindUs: request.body.howDidYouFindUs,
       cvUpload: request.file.filename,
-    }
-    const collection = db.collection('volunteerform')
-    await collection.insertOne(data)
-    response.send({ message: 'Volunteer form submitted successfully!' })
+    };
+
+    const collection = db.collection('volunteerform');
+    await collection.insertOne(data);
+
+    response.send({ message: 'Volunteer form submitted successfully!' });
   } catch (error) {
-    console.error(error)
-    response.status(500).send({ message: 'Error inserting data into database' })
+    console.error(error);
+    response.status(500).send({ message: 'Error inserting data into database' });
   }
-})
+});
 
 app.post('/submit/indsponsor', async (request, response) => {
   try {
@@ -75,15 +88,17 @@ app.post('/submit/indsponsor', async (request, response) => {
       emailAddress: request.body.emailAddress,
       phoneNumber: request.body.phoneNumber,
       message: request.body.message,
-    }
-    const collection = db.collection('indsponsors')
-    await collection.insertOne(data)
-    response.send({ message: 'Individual Sponsorship form submitted successfully!' })
+    };
+
+    const collection = db.collection('indsponsors');
+    await collection.insertOne(data);
+
+    response.send({ message: 'Individual Sponsorship form submitted successfully!' });
   } catch (error) {
-    console.error(error)
-    response.status(500).send({ message: 'Error inserting data into database' })
+    console.error(error);
+    response.status(500).send({ message: 'Error inserting data into database' });
   }
-})
+});
 
 app.post('/submit/copsponsor', async (request, response) => {
   try {
@@ -94,15 +109,17 @@ app.post('/submit/copsponsor', async (request, response) => {
       phoneNumber: request.body.phoneNumber,
       emailAddress: request.body.emailAddress,
       message: request.body.message,
-    }
-    const collection = db.collection('corporatesponsors')
-    await collection.insertOne(data)
-    response.send({ message: 'Corporate Sponsorship form submitted successfully!' })
+    };
+
+    const collection = db.collection('corporatesponsors');
+    await collection.insertOne(data);
+
+    response.send({ message: 'Corporate Sponsorship form submitted successfully!' });
   } catch (error) {
-    console.error(error)
-    response.status(500).send({ message: 'Error inserting data into database' })
+    console.error(error);
+    response.status(500).send({ message: 'Error inserting data into database' });
   }
-})
+});
 
 app.post('/submit/patients', async (request, response) => {
   try {
@@ -122,7 +139,7 @@ app.post('/submit/patients', async (request, response) => {
       physicianPhoneNumber: request.body.physicianPhoneNumber,
       estimatedCostOfSurgery: request.body.estimatedCostOfSurgery,
       amountRaised: request.body.amountRaised,
-      annualIncome: request.body.annualIncome,
+        annualIncome: request.body.annualIncome,
       partyResponsibleForPayment: request.body.partyResponsibleForPayment,
       nameOfHealthInsuranceCompany: request.body.nameOfHealthInsuranceCompany,
       insuranceCompanyPhone: request.body.insuranceCompanyPhone,
@@ -130,15 +147,17 @@ app.post('/submit/patients', async (request, response) => {
       relevantMedicalHistory: request.body.relevantMedicalHistory,
       pastSurgicalHistory: request.body.pastSurgicalHistory,
       currentMedications: request.body.currentMedications,
-    }
-    const collection = db.collection('patients')
-    await collection.insertOne(data)
-    response.send({ message: 'Patient form submitted successfully!' })
+    };
+
+    const collection = db.collection('patients');
+    await collection.insertOne(data);
+
+    response.send({ message: 'Patient form submitted successfully!' });
   } catch (error) {
-    console.error(error)
-    response.status(500).send({ message: 'Error inserting data into database' })
+    console.error(error);
+    response.status(500).send({ message: 'Error inserting data into database' });
   }
-})
+});
 
 app.post('/submit/contact', async (request, response) => {
   try {
@@ -147,39 +166,42 @@ app.post('/submit/contact', async (request, response) => {
       phone: request.body.phone,
       emailAddress: request.body.emailAddress,
       message: request.body.message,
-    }
-    const collection = db.collection('contacts')
-    await collection.insertOne(data)
-    response.send({ message: 'Contact form submitted successfully!' })
+    };
+
+    const collection = db.collection('contacts');
+    await collection.insertOne(data);
+
+    response.send({ message: 'Contact form submitted successfully!' });
   } catch (error) {
-    console.error(error)
-    response.status(500).send({ message: 'Error inserting data into database' })
+    console.error(error);
+    response.status(500).send({ message: 'Error inserting data into database' });
   }
-})
+});
 
 app.post('/submit/donation', upload.single('ssUpload'), async (request, response) => {
-    try {
-        const data = {
-            donorName: request.body.donorName,
-            emailAddress: request.body.emailAddress,
-            phoneNumber: request.body.phoneNumber,
-            donationAmount: request.body.donationAmount,
-            message: request.body.message,
-            screenshot: request.file.filename,
-        }
-        const collection = db.collection('donations')
-        await collection.insertOne(data)
-        response.send({ message: 'Donation form submitted successfully!' })
-    } catch (error) {
-        console.error(error)
-        response.status(500).send({ message: 'Error inserting data into database' })
-    }
-})
+  try {
+    const data = {
+      donorName: request.body.donorName,
+      emailAddress: request.body.emailAddress,
+      phoneNumber: request.body.phoneNumber,
+      donationAmount: request.body.donationAmount,
+      message: request.body.message,
+      screenshot: request.file.filename,
+    };
+
+    const collection = db.collection('donations');
+    await collection.insertOne(data);
+
+    response.send({ message: 'Donation form submitted successfully!' });
+  } catch (error) {
+    console.error(error);
+    response.status(500).send({ message: 'Error inserting data into database' });
+  }
+});
 
 app.get('/', (request, response) => {
-  response.sendFile(('index.html'))
-})
-
+  response.sendFile(path.join(__dirname, 'index.html'));
+});
 
 app.get('/panel', async (req, res) => {
   try {
@@ -190,15 +212,13 @@ app.get('/panel', async (req, res) => {
     const contacts = await db.collection('contacts').find().toArray();
     const donations = await db.collection('donations').find().toArray();
 
-    
-
     res.render('index', {
       volunteers: volunteers,
       individualSponsors: individualSponsors,
       corporateSponsors: corporateSponsors,
       patients: patients,
       contacts: contacts,
-      donations: donations
+      donations: donations,
     });
   } catch (error) {
     console.error(error);
@@ -207,66 +227,67 @@ app.get('/panel', async (req, res) => {
 });
 
 app.get('/volunteers', async (req, res) => {
-    try {
-        const volunteers = await db.collection('volunteerform').find().toArray();
-        res.render('volunteers', { volunteers: volunteers });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ message: 'Error fetching data from database' });
-    }
+  try {
+    const volunteers = await db.collection('volunteerform').find().toArray();
+    res.render('volunteers', { volunteers: volunteers });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Error fetching data from database' });
+  }
 });
 
 app.get('/indsponsors', async (req, res) => {
-    try {
-        const individualSponsors = await db.collection('indsponsors').find().toArray();
-        res.render('indsponsors', { individualSponsors: individualSponsors });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ message: 'Error fetching data from database' });
-    }
+  try {
+    const individualSponsors = await db.collection('indsponsors').find().toArray();
+    res.render('indsponsors', { individualSponsors: individualSponsors });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Error fetching data from database' });
+  }
 });
 
 app.get('/corporatesponsors', async (req, res) => {
-    try {
-        const corporateSponsors = await db.collection('corporatesponsors').find().toArray();
-        res.render('corporatesponsors', { corporateSponsors: corporateSponsors });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ message: 'Error fetching data from database' });
-    }
+  try {
+    const corporateSponsors = await db.collection('corporatesponsors').find().toArray();
+    res.render('corporatesponsors', { corporateSponsors: corporateSponsors });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Error fetching data from database' });
+  }
 });
 
 app.get('/patients', async (req, res) => {
-    try {
-        const patients = await db.collection('patients').find().toArray();
-        res.render('patients', { patients: patients });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ message: 'Error fetching data from database' });
-    }
+  try {
+    const patients = await db.collection('patients').find().toArray();
+    res.render('patients', { patients: patients });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Error fetching data from database' });
+  }
 });
 
 app.get('/contacts', async (req, res) => {
-    try {
-        const contacts = await db.collection('contacts').find().toArray();
-        res.render('contacts', { contacts: contacts });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ message: 'Error fetching data from database' });
-    }
+  try {
+    const contacts = await db.collection('contacts').find().toArray();
+    res.render('contacts', { contacts: contacts });
+  } catch (error) {
+    
+    console.error(error);
+    res.status(500).send({ message: 'Error fetching data from database' });
+  }
 });
 
 app.get('/donations', async (req, res) => {
-    try {
-        const donations = await db.collection('donations').find().toArray();
-        res.render('donations', { donations: donations });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ message: 'Error fetching data from database' });
-    }
+  try {
+    const donations = await db.collection('donations').find().toArray();
+    res.render('donations', { donations: donations });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Error fetching data from database' });
+  }
 });
 
-
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+  console.log(`Server running on port ${PORT}`);
+});
+
